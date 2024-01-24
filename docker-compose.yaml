@@ -49,12 +49,12 @@ services:
         - GID=${UID:-1000}
         - USERNAME=${USERNAME:-devuser}
     #environment:
-      #- "ROS_IP=172.16.60.34"
-      #- "ROS_MASTER_URI=http://172.16.60.30:11311"
+      #- "ROS_IP=xxx.xx.xx.xx"
+      #- "ROS_MASTER_URI=http://xxx.xx.xx.xx:11311"
 
     #volumes:
       ## Mount the source code
-      ##- ../rtab_map_test:/overlay_ws/src/rtab_map_test:rw
+      ##- ../some_folder:/overlay_ws/src/some_folder:rw
     devices:
       - /dev/video0:/dev/video0
     user: ${USERNAME:-devuser}
@@ -63,5 +63,5 @@ services:
   
   #viz:
     #extends: dev
-    #command: rviz -d /overlay_ws/src/rtab_map_test/rviz.rviz  
+    #command: rviz -d /overlay_ws/src/some_folder/rviz.rviz  
   
