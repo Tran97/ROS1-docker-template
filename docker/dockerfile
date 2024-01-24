@@ -23,20 +23,13 @@ RUN apt-get update && apt-get install -y \
   iputils-ping \
   python3-vcstool
 
-# Install ipubot2 dependencies (only neccessary on the bot itself?)
-#RUN apt-get update && apt-get install -y \
- #ros-${ROS_DISTRO}-velodyne \
- #ros-${ROS_DISTRO}-navigation \
- #ros-${ROS_DISTRO}-rtabmap-ros \
- #ros-${ROS_DISTRO}-teb-local-planner \
- #ros-${ROS_DISTRO}-robot-localization \
- #ros-${ROS_DISTRO}-joy
-
 
 # Create Catkin workspace 
-RUN mkdir -p /underlay_ws/src \
- && cd /underlay_ws \
- && source /opt/ros/noetic/setup.bash \
+RUN mkdir -p /underlay_ws/src 
+WORKDIR /underlay_ws/src
+COPY dependencies.repos .
+RUN vcs import < dependencies.repos
+RUN source /opt/ros/noetic/setup.bash \
  && catkin init 
 
 # Build the base Catkin workspace
@@ -53,6 +46,10 @@ ENV NO_AT_BRIDGE 1
 # Set up the work directory and entrypoint
 WORKDIR /underlay_ws
 COPY ./docker/entrypoint.sh /
+
+# Alias python3 as python
+RUN ln -s /usr/bin/python3 /usr/bin/python
+
 ENTRYPOINT [ "/entrypoint.sh" ]
 
 
@@ -65,8 +62,8 @@ RUN source /opt/ros/noetic/setup.bash \
  && mkdir -p /overlay_ws/src \
  && cd /overlay_ws \ 
  && catkin init
-#COPY ./tb3_autonomy/ /overlay_ws/src/tb3_autonomy/
-#COPY ./tb3_worlds/ /overlay_ws/src/tb3_worlds/
+#COPY ./some_folder/ /overlay_ws/src/some_folder/
+#COPY ./some_other_folder/ /overlay_ws/src/some_other_folder/
 RUN source /opt/ros/noetic/setup.bash \
  && catkin build
 
@@ -99,7 +96,7 @@ RUN groupadd --gid $GID $USERNAME \
  && chown -R ${UID}:${GID} /home/${USERNAME}
 
 # Set the ownership of the overlay workspace to the new user
-RUN chown -R ${UID}:${GID} /overlay_ws/
+RUN chown -R ${UID}:${GID} /overlay_ws/ /underlay_ws/
 
 
 # Set the user and source entrypoint in the user's .bashrc file

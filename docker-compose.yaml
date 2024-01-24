@@ -48,25 +48,20 @@ services:
         - UID=${UID:-1000}
         - GID=${UID:-1000}
         - USERNAME=${USERNAME:-devuser}
-    volumes:
-      # Mount the source code
-      - ../rtab_map_test:/overlay_ws/src/rtab_map_test:rw
-      # Mount colcon build artifacts for faster rebuilds
-      - ./.colcon/build/:/overlay_ws/build/:rw
-      - ./.colcon/install/:/overlay_ws/install/:rw
-      - ./.colcon/log/:/overlay_ws/log/:rw
+    #environment:
+      #- "ROS_IP=172.16.60.34"
+      #- "ROS_MASTER_URI=http://172.16.60.30:11311"
+
+    #volumes:
+      ## Mount the source code
+      ##- ../rtab_map_test:/overlay_ws/src/rtab_map_test:rw
     devices:
       - /dev/video0:/dev/video0
     user: ${USERNAME:-devuser}
     command: sleep infinity
 
-  ## Runs basic simulation
-  #sim:
-     #extends: dev
-     #command: ros2 launch tranbot_worlds tranbot_world.launch.py
-
-  ## Demo world
-  #demo-world:
-     #extends: dev 
-     #command: ros2 launch tranbot_spinup sim.launch.py
-    
+  
+  #viz:
+    #extends: dev
+    #command: rviz -d /overlay_ws/src/rtab_map_test/rviz.rviz  
+  
