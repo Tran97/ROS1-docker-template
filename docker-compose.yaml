@@ -5,7 +5,7 @@ services:
     image: ${PROJECT_NAME}:base
     build:
       context: .
-      dockerfile: docker/Dockerfile
+      dockerfile: ./docker/Dockerfile
       args:
         ROS_DISTRO: noetic
       target: base
@@ -33,7 +33,7 @@ services:
     image: ${PROJECT_NAME}:overlay
     build:
       context: .
-      dockerfile: docker/Dockerfile
+      dockerfile: ./docker/Dockerfile
       target: overlay
 
   # Developer container
@@ -42,7 +42,7 @@ services:
     image: ${PROJECT_NAME}:dev
     build:
       context: .
-      dockerfile: docker/Dockerfile
+      dockerfile: ./docker/Dockerfile
       target: dev
       args:
         - UID=${UID:-1000}
